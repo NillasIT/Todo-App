@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/controller/app_controller.dart';
 import 'package:todo_app/pages/home_page.dart';
-import 'package:todo_app/utilities/task_manager.dart';
+import 'package:todo_app/controller/task_manager.dart';
 
 void main() {
   runApp(
@@ -12,6 +13,7 @@ void main() {
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -21,9 +23,15 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: Size(360, 660),
       builder: (context, child) {
-        return MaterialApp(
-          home: HomePage(),
-          debugShowCheckedModeBanner: false,
+        return AnimatedBuilder(
+          animation: AppController.instance,
+          builder: (context, child) {
+            return MaterialApp(
+              themeMode: ThemeMode.system,
+              home: HomePage(),
+              debugShowCheckedModeBanner: false,
+            );
+          },
         );
       },
     );

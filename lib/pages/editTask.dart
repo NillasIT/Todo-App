@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/utilities/task_manager.dart';
+import 'package:todo_app/controller/app_controller.dart';
+import 'package:todo_app/controller/task_manager.dart';
 
 class EditTask extends StatefulWidget {
   final int index;
@@ -53,14 +54,23 @@ class _EditTaskState extends State<EditTask> {
     bool isNewTask = true;
 
     return Scaffold(
+      backgroundColor: AppController.instance.isDartTheme
+                      ? const Color.fromARGB(255, 21, 20, 20)
+                      : Colors.white,
       appBar: AppBar(
         //forceMaterialTransparency: true,
         toolbarHeight: ScreenUtil().setHeight(60),
-        backgroundColor: Color.fromRGBO(0, 161, 154, 1),
-        foregroundColor: Colors.white,
-        elevation: 7,
+        backgroundColor: AppController.instance.isDartTheme
+                      ? const Color.fromARGB(255, 21, 20, 20)
+                      : Colors.white,
+
+        foregroundColor: AppController.instance.isDartTheme
+                      ? Colors.white
+                      : Colors.black,
+        
+        elevation: 0,
         title: Text(
-          "Editar tarefa",
+          "Edit task",
           style: GoogleFonts.raleway(
             fontSize: 25.sp, 
             fontWeight: FontWeight.bold,
@@ -72,7 +82,11 @@ class _EditTaskState extends State<EditTask> {
             onPressed: () { 
               saveTask();
             }, 
-            icon: Icon(Icons.edit),
+            icon: Icon(
+              Icons.edit,
+              size: 20.w,
+              color: Colors.amber,
+            ),
           ),
         ],
       ),
@@ -84,11 +98,13 @@ class _EditTaskState extends State<EditTask> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: TextField(
                 controller: taskNameController,
-                maxLines: 2,
                 
                 style: GoogleFonts.raleway(
-                  fontSize: 30.sp,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
+                  color: AppController.instance.isDartTheme
+                        ? Colors.white
+                        : Colors.black,
                 ),
                 textAlign: TextAlign.justify,
               
@@ -98,8 +114,8 @@ class _EditTaskState extends State<EditTask> {
                             // ignore: dead_code
                             : null,
                   hintStyle: GoogleFonts.raleway(
-                    fontSize: 30.sp,
-                    color: Colors.grey,
+                    fontSize: 20.sp,
+                    color: Colors.grey.shade700,
                   ),
               
                   focusedBorder: OutlineInputBorder(
@@ -121,7 +137,11 @@ class _EditTaskState extends State<EditTask> {
         
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: Divider(),
+              child: Divider(
+                color: AppController.instance.isDartTheme
+                        ? const Color.fromARGB(255, 51, 51, 51)
+                        : const Color.fromARGB(255, 202, 201, 201),
+              ),
             ),
         
             Padding(
@@ -132,8 +152,8 @@ class _EditTaskState extends State<EditTask> {
                   "Section/Content Description",
                   style: GoogleFonts.raleway(
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
-                    fontSize: 15.sp,
+                    color: Color.fromRGBO(0, 161, 154, 1),
+                    fontSize: 14.sp,
                   ),
                 ),
               ),
@@ -141,18 +161,24 @@ class _EditTaskState extends State<EditTask> {
             
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: Divider(),
+              child: Divider(
+                color: AppController.instance.isDartTheme
+                        ? const Color.fromARGB(255, 51, 51, 51)
+                        : const Color.fromARGB(255, 202, 201, 201),
+              ),
             ),
         
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: TextField(
                 controller: taskDescriptionController,
-                maxLines: 12,
+                maxLines: 25,
               
                 style: GoogleFonts.raleway(
-                  fontSize: 20.sp,
-                  color: Colors.grey.shade700,
+                  fontSize: 14.sp,
+                  color: AppController.instance.isDartTheme
+                        ? Colors.grey.shade100
+                        : Colors.grey.shade900,
                 ),
                 textAlign: TextAlign.justify,
                 
@@ -163,8 +189,10 @@ class _EditTaskState extends State<EditTask> {
                             : null,
               
                   hintStyle: GoogleFonts.raleway(
-                    fontSize: 20.sp,
-                    color: Colors.grey,
+                    fontSize: 14.sp,
+                    color: AppController.instance.isDartTheme
+                        ? Colors.grey.shade800
+                        : Colors.grey.shade700,
                   ),
               
                   focusedBorder: OutlineInputBorder(

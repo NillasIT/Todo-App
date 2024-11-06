@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/controller/app_controller.dart';
 import 'package:todo_app/pages/editTask.dart';
-import 'package:todo_app/utilities/task_manager.dart';
+import 'package:todo_app/controller/task_manager.dart';
 
 class TodoHome extends StatelessWidget {
   final String taskName;
@@ -35,14 +36,19 @@ class TodoHome extends StatelessWidget {
               children: [
                 Container(
                   width: 330.w,
-                  height: 150.h,
+                  height: 100.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.5.r),
-                    color: Color.fromRGBO(248, 247, 247, 1),
+                    color: AppController.instance.isDartTheme
+                          ? Colors.grey.shade900
+                          : Colors.grey.shade100,
 
                     boxShadow: [
                       BoxShadow(
-                        color: const Color.fromARGB(255, 200, 198, 198),
+                        color: AppController.instance.isDartTheme
+                              ? const Color.fromARGB(255, 8, 8, 8)
+                              : Colors.grey.shade400,
+
                         offset: Offset(4.w, 8.h),
                         blurRadius: 20.r,
                         spreadRadius: 1.r,
@@ -55,12 +61,13 @@ class TodoHome extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(
                           left: 15.w,
-                          top: 60.h,
+                          top: 10.h,
                           right: 15.w,
                         ),
 
                         child: Expanded(
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
                                 child: GestureDetector(
@@ -78,12 +85,15 @@ class TodoHome extends StatelessWidget {
                                   child: AutoSizeText(
                                     taskName,
                                     overflow: TextOverflow.ellipsis,
-                                    minFontSize: 14.sp,
-                                    stepGranularity: 1.sp,
+                                    //minFontSize: 14.sp,
+                                    //stepGranularity: 1.sp,
                                     maxLines: 1,
                                     style: GoogleFonts.raleway(
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.w500,
+                                      color: AppController.instance.isDartTheme
+                                            ? Colors.white
+                                            : Colors.black,
                                     ),
                                   ),
                                 ),
@@ -127,77 +137,87 @@ class TodoHome extends StatelessWidget {
                       ),
 
                       SizedBox(
-                        height: 10.h,
+                        height: 5.h,
                       ),
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Divider(),
+                        child: Divider(
+                          color: AppController.instance.isDartTheme
+                              ? const Color.fromARGB(255, 51, 51, 51)
+                              : Colors.grey.shade300,
+                        ),
                       ),
 
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.w),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 1.w),
-                                child: Expanded(
-                                  child: IconButton(
-                                    onPressed: () {
-                                      taskManager.deleteTask(index);
-                                    },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      size: 25.sp,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
 
-                              Padding(
-                                padding: EdgeInsets.only(right: 80.w),
-                                child: Expanded(
-                                  child: IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context, MaterialPageRoute(
-                                          builder: (context) => EditTask(
-                                            index: index, 
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 1.w),
+                              child: Expanded(
+                                child: Text(
+                                  dateTime,
+                                  style: GoogleFonts.raleway(
+                                    color: AppController.instance.isDartTheme
+                                        ? const Color.fromARGB(255, 195, 194, 194)
+                                        : const Color.fromARGB(255, 84, 82, 82),
                                             
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        size: 25.sp,
-                                      ),
+                                    fontSize: 16.sp
                                   ),
                                 ),
                               ),
+                            ),
+                            SizedBox(width: 55.w,),
 
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 1.w),
-                                child: Expanded(
-                                  child: Text(
-                                    dateTime,
-                                    style: GoogleFonts.raleway(
-                                      color: Colors.grey,
-                                      fontSize: 13.sp
-                                    ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 1.w),
+                              child: Expanded(
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context, MaterialPageRoute(
+                                      builder: (context) => EditTask(
+                                        index: index, 
+                                        
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    size: 20.sp,
+                                    color: Colors.amber,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.only(left: 1.w),
+                              child: Expanded(
+                                child: IconButton(
+                                  onPressed: () {
+                                    taskManager.deleteTask(index);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    size: 20.sp,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
 
-                Container(
+                /* Container(
                   width: 330.w,
                   height: 40.h,
                   decoration: BoxDecoration(
@@ -206,7 +226,7 @@ class TodoHome extends StatelessWidget {
                         topRight: Radius.circular(15.5.r),
                       ),
                       color: Color.fromRGBO(0, 161, 154, 1)),
-                ),
+                ), */
               ],
             ),
             SizedBox(

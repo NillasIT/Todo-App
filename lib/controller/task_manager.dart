@@ -8,7 +8,12 @@ class TaskManager with ChangeNotifier{
   //String formattedDate = DateFormat("EEEE, dd MMM yyyy").format(now);
   List<List<dynamic>> todoList = [];
 
-  // Carregar tarefas do SharedPreferences
+  Future<void> saveTasks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedTasks = json.encode(todoList);
+    prefs.setString('todoList', encodedTasks);
+  }
+  
   // Carregar tarefas do SharedPreferences
   Future<void> loadTasks() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -23,19 +28,12 @@ class TaskManager with ChangeNotifier{
         [
           "Tap plus to add new task",
           false,
-          "Descrição do meu projeto",
+          "Task description!",
           DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now()).toString(),
         ],
       ];
     }
     notifyListeners();
-  }
-
-  // Salvar tarefas no SharedPreferences
-  Future<void> saveTasks() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String encodedTasks = json.encode(todoList);
-    prefs.setString('todoList', encodedTasks);
   }
 
   void checkBox(int index) {

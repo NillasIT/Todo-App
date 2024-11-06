@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:todo_app/controller/app_controller.dart';
 
 class TaskDescription extends StatefulWidget {
   final taskNameController;
@@ -27,14 +28,22 @@ class _TaskDescriptionState extends State<TaskDescription> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: AppController.instance.isDartTheme
+                      ? const Color.fromARGB(255, 21, 20, 20)
+                      : Colors.white,
       appBar: AppBar(
         toolbarHeight: ScreenUtil().setHeight(60),
-        backgroundColor: Color.fromRGBO(0, 161, 154, 1),
-        foregroundColor: Colors.white,
-        elevation: 7,
+        backgroundColor: AppController.instance.isDartTheme
+                      ? const Color.fromARGB(255, 21, 20, 20)
+                      : Colors.white,
+
+        foregroundColor: AppController.instance.isDartTheme
+                      ? Colors.white
+                      : Colors.black,
+        elevation: 0,
 
         title: Text(
-          "Add task",
+          "Create new task",
           style: GoogleFonts.raleway(
             fontSize: 25.sp, 
             fontWeight: FontWeight.bold,
@@ -46,8 +55,10 @@ class _TaskDescriptionState extends State<TaskDescription> {
             onPressed: widget.onPressed, 
             
             icon: Icon(
-              Icons.save_alt,
-            )
+              Icons.save_rounded,
+              size: 20.w,
+              color: Color.fromRGBO(0, 161, 154, 1),
+            ),
           ),
         ],
       ),
@@ -59,19 +70,21 @@ class _TaskDescriptionState extends State<TaskDescription> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: TextField(
                 controller: widget.taskNameController,
-                maxLines: 2,
               
                 style: GoogleFonts.raleway(
-                  fontSize: 30.sp,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
+                  color: AppController.instance.isDartTheme
+                        ? Colors.white
+                        : Colors.black,
                 ),
                 textAlign: TextAlign.justify,
               
                 decoration: InputDecoration(
                   hintText: "Titulo da tarefa",
                   hintStyle: GoogleFonts.raleway(
-                    fontSize: 30.sp,
-                    color: Colors.grey,
+                    fontSize: 20.sp,
+                    color: Colors.grey.shade600,
                     fontWeight: FontWeight.bold,
                   ),
                   
@@ -94,7 +107,11 @@ class _TaskDescriptionState extends State<TaskDescription> {
         
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: Divider(),
+              child: Divider(
+                color: AppController.instance.isDartTheme
+                        ? const Color.fromARGB(255, 51, 51, 51)
+                        : const Color.fromARGB(255, 202, 201, 201),
+              ),
             ),
         
             Padding(
@@ -105,8 +122,8 @@ class _TaskDescriptionState extends State<TaskDescription> {
                   "Section/Content Description",
                   style: GoogleFonts.raleway(
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
-                    fontSize: 15.sp,
+                    color: Color.fromRGBO(0, 161, 154, 1),
+                    fontSize: 14.sp,
                   ),
                 ),
               ),
@@ -114,26 +131,32 @@ class _TaskDescriptionState extends State<TaskDescription> {
             
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: Divider(),
+              child: Divider(
+                color: AppController.instance.isDartTheme
+                        ? const Color.fromARGB(255, 51, 51, 51)
+                        : const Color.fromARGB(255, 202, 201, 201),
+              ),
             ),
         
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: TextField(
                 controller: widget.taskDescriptionController,
-                maxLines: 12,
+                maxLines: 25,
               
                 style: GoogleFonts.raleway(
-                  fontSize: 20.sp,
-                  color: Colors.grey.shade700,
+                  fontSize: 14.sp,
+                  color: AppController.instance.isDartTheme
+                        ? Colors.grey.shade100
+                        : Colors.grey.shade900,
                 ),
                 textAlign: TextAlign.justify,
                 
                 decoration: InputDecoration(
                   hintText: "Nota",
                   hintStyle: GoogleFonts.raleway(
-                    fontSize: 20.sp,
-                    color: Colors.grey,
+                    fontSize: 14.sp,
+                    color: Colors.grey.shade700,
                   ),
               
                   focusedBorder: OutlineInputBorder(
