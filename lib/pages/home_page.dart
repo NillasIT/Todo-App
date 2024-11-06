@@ -40,22 +40,27 @@ class _HomePageState extends State<HomePage> {
     final taskManager = Provider.of<TaskManager>(context);
 
     // Filtra as tarefas de acordo com o filtro selecionado
-    List todoListToShow;
+    List<Map<String, dynamic>> todoListToShow;
     if (filter == "Completed") {
       todoListToShow =
-          taskManager.todoList.where((task) => task[1] == true).toList();
+          taskManager.completedTasks;
     } else if (filter == "Uncompleted") {
       todoListToShow =
-          taskManager.todoList.where((task) => task[1] == false).toList();
+          taskManager.uncompletedTasks;
     } else {
-      todoListToShow = taskManager.todoList;
+      // Mapear todoList para incluir índice original
+      todoListToShow = taskManager.todoList
+          .asMap()
+          .entries
+          .map((entry) => {'task': entry.value, 'index': entry.key})
+          .toList();
     }
 
     // Filtra com base na busc
     String searchQuery = _searchController.text.toLowerCase();
     if (searchQuery.isNotEmpty) {
       todoListToShow = todoListToShow
-          .where((task) => task[0].toLowerCase().contains(searchQuery))
+          .where((task) => task.toString().toLowerCase().contains(searchQuery))
           .toList();
       _searchController.clear();
     } else {
@@ -339,17 +344,21 @@ class _HomePageState extends State<HomePage> {
                 : ListView.builder(
                     itemCount: todoListToShow.length,
                     itemBuilder: (context, index) {
-                      String taskName = todoListToShow[index][0];
-                      bool isCompleted = todoListToShow[index][1];
-                      String taskDescription = todoListToShow[index][2];
-                      String dateTime = todoListToShow[index][3];
+                      var taskData = todoListToShow[index];
+                      List<dynamic> task = taskData['task'];
+                      int originalIndex = taskData['index'];
+
+                      String taskName = task[0];
+                      bool isCompleted = task[1];
+                      String taskDescription = task[2];
+                      String dateTime = task[3];
 
                       return TodoHome(
                         taskName: taskName,
                         taskDescription: taskDescription,
                         isCompleted: isCompleted,
                         dateTime: dateTime,
-                        index: index,
+                        index: originalIndex,
                       );
                     },
                   ),
