@@ -3,12 +3,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:note/controller/app_controller.dart';
+import 'package:note/controller/custom_switch.dart';
+import 'package:note/controller/task_manager.dart';
+import 'package:note/pages/task_description.dart';
+import 'package:note/pages/todo_home.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/controller/app_controller.dart';
-import 'package:todo_app/controller/custom_switch.dart';
-import 'package:todo_app/pages/taskDescription.dart';
-import 'package:todo_app/pages/todo_home.dart';
-import 'package:todo_app/controller/task_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,20 +19,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _taskNameController = TextEditingController();
-  final TextEditingController _taskDescriptionController =
-      TextEditingController();
+  final TextEditingController _taskDescriptionController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
 
   String filter = "All";
-  String key = "Search";
-  String value = "Search Result";
   String activeButton = "";
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    final taskManager = Provider.of<TaskManager>(context, listen: false);
-    taskManager.loadTasks(); // Carregar tarefas no início
+    // Load tasks asynchronously
+    Future.microtask(() {
+      Provider.of<TaskManager>(context, listen: false).loadTasks().then((_) {
+        setState(() {
+          isLoading = false; // Set loading state to false after tasks are loaded
+        });
+      });
+    });
   }
 
   @override
@@ -60,12 +64,10 @@ class _HomePageState extends State<HomePage> {
     String searchQuery = _searchController.text.toLowerCase();
     if (searchQuery.isNotEmpty) {
       todoListToShow = todoListToShow
-          .where((task) => task.toString().toLowerCase().contains(searchQuery))
-          .toList();
+      .where((task) => task['task'][0].toLowerCase().contains(searchQuery))
+      .toList();
       _searchController.clear();
-    } else {
-      _searchController.clear();
-    }
+    } 
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -74,9 +76,10 @@ class _HomePageState extends State<HomePage> {
                     : Colors.white,
 
       appBar: AppBar(
-        backgroundColor: Colors.white.withOpacity(0),
+        backgroundColor: Colors.transparent,
         centerTitle: false,
         toolbarHeight: 190.h,
+
         flexibleSpace: ClipRRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10.w, sigmaY: 10.h),
@@ -85,253 +88,246 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-
-        /* actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomSwitch(),
-          ),
-        ], */
         
-        title: Expanded(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: AutoSizeText(
-                      "Today",
-                      style: GoogleFonts.raleway(
-                          fontSize: 25.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppController.instance.isDartTheme
+        title: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Today",
+                    style: GoogleFonts.raleway(
+                        fontSize: 25.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppController.instance.isDartTheme
+                             ? Colors.white
+                             : Colors.black,
+                    ),
+                  ),
+                ),
+        
+               CustomSwitch(),
+              ],
+            ),
+        
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AutoSizeText(
+                "Best platform for creating to-do list",
+                style: GoogleFonts.raleway(
+                  fontSize: 10.sp,
+                  color: AppController.instance.isDartTheme
+                       ? Colors.grey.shade100
+                       : Colors.grey.shade800,
+                ),
+              ),
+            ),
+        
+            SizedBox(
+              height: 30.h,
+            ),
+        
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    style: GoogleFonts.raleway(
+                      color:  AppController.instance.isDartTheme
                                ? Colors.white
                                : Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: AppController.instance.isDartTheme
+                               ? Colors.grey.shade900
+                               : Colors.grey.shade300,
+                      
+                      hintText: "  Search task",
+                      hintStyle: GoogleFonts.raleway(
+                        color: AppController.instance.isDartTheme
+                               ? Colors.grey.shade400
+                               : Colors.grey.shade500,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.5.r),
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.5.r),
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                        ),
                       ),
                     ),
                   ),
-
-                  CustomSwitch(),
-                ],
-              ),
-          
-              
-              SizedBox(width: 210.w),
-              //CustomSwitch(),
-          
-              Align(
-                alignment: Alignment.centerLeft,
-                child: AutoSizeText(
-                  "Best platform for creating to-do list",
-                  style: GoogleFonts.raleway(
-                    fontSize: 10.sp,
+                ),
+        
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      searchQuery = _searchController.text;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.search,
                     color: AppController.instance.isDartTheme
-                         ? Colors.grey.shade100
-                         : Colors.grey.shade800,
+                          ? Colors.white
+                          : Colors.grey.shade900,
                   ),
                 ),
-              ),
-          
-              SizedBox(
-                height: 30.h,
-              ),
-          
-              Row(
+              ],
+            ),
+        
+            SizedBox(height: 20.w),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 1.w),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      style: GoogleFonts.raleway(
-                        color:  AppController.instance.isDartTheme
-                                 ? Colors.white
-                                 : Colors.black,
+                  OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        filter = "All";
+                        activeButton = "All";
+                      });
+                    },
+                      
+                    style: ButtonStyle(
+                      fixedSize: WidgetStateProperty.all(Size(60.w, 25.h)),
+                      side: WidgetStateProperty.all(
+                        BorderSide(color: Colors.transparent),
                       ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: AppController.instance.isDartTheme
-                                 ? Colors.grey.shade900
-                                 : Colors.grey.shade300,
-                        
-                        hintText: "  Search task",
-                        hintStyle: GoogleFonts.raleway(
-                          color: AppController.instance.isDartTheme
-                                 ? Colors.grey.shade400
-                                 : Colors.grey.shade500,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18.5.r),
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18.5.r),
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
+                      backgroundColor: WidgetStatePropertyAll(
+                        Colors.transparent,
+                      ),
+                      foregroundColor: WidgetStatePropertyAll(
+                        Color.fromRGBO(0, 161, 154, 1),
+                      ),
+                    ),
+                      
+                    child: AutoSizeText(
+                      "All",
+                      minFontSize: 10.sp,
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                      stepGranularity: 1.sp,
+                      style: GoogleFonts.raleway(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  IconButton(
+                      
+                  OutlinedButton(
                     onPressed: () {
                       setState(() {
-                        searchQuery = _searchController.text;
+                        filter = "Completed";
+                        activeButton = "Completed";
                       });
                     },
-                    icon: Icon(
-                      Icons.search,
-                      color: AppController.instance.isDartTheme
+                      
+                    style: ButtonStyle(
+                      fixedSize: WidgetStatePropertyAll(Size(110.w, 25.h)),
+                      side: WidgetStateProperty.all(
+                        BorderSide(
+                          color: activeButton == "Completed"
+                              ? Colors.transparent
+                              : Color.fromRGBO(0, 161, 154, 1),
+                        ),
+                      ),
+                      
+                      backgroundColor: WidgetStatePropertyAll(
+                        activeButton == "Completed"
+                            ? Color.fromRGBO(0, 161, 154, 1)
+                            : Colors.transparent,
+                      ),
+                      
+                      foregroundColor: WidgetStatePropertyAll(
+                        activeButton == "Completed"
                             ? Colors.white
-                            : Colors.grey.shade900,
+                            : Color.fromRGBO(0, 161, 154, 1),
+                      ),
+                    ),
+                      
+                    child: AutoSizeText(
+                      minFontSize: 8.sp,
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                      stepGranularity: 1.sp,
+                      "Completed",
+                      style: GoogleFonts.raleway(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                      
+                  OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        filter = "Uncompleted";
+                        activeButton = "Uncompleted";
+                      });
+                    },
+                      
+                    style: ButtonStyle(
+                      fixedSize: WidgetStatePropertyAll(Size(120.w, 25.h)),
+                      side: WidgetStateProperty.all(
+                        BorderSide(
+                          color: activeButton == "Uncompleted"
+                              ? Colors.transparent
+                              : Colors.red,
+                        ),
+                      ),
+                      
+                      backgroundColor: WidgetStatePropertyAll(
+                        activeButton == "Uncompleted"
+                            ? Colors.red
+                            : Colors.transparent,
+                      ),
+                      foregroundColor: WidgetStatePropertyAll(
+                        activeButton == "Uncompleted"
+                            ? Colors.white
+                            : Colors.red,
+                      ),
+                    ),
+                      
+                    child: AutoSizeText(
+                      "Uncompleted",
+                      minFontSize: 8.sp,
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                      stepGranularity: 1.sp,
+                      style: GoogleFonts.raleway(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20.w),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 1.w),
-                child: Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          setState(() {
-                            filter = "All";
-                            activeButton = "All";
-                          });
-                        },
-          
-                        style: ButtonStyle(
-                          fixedSize: WidgetStatePropertyAll(Size(60.w, 25.h)),
-                          side: WidgetStateProperty.all(
-                            BorderSide(color: Colors.transparent),
-                          ),
-                          backgroundColor: WidgetStatePropertyAll(
-                            Colors.transparent,
-                          ),
-                          foregroundColor: WidgetStatePropertyAll(
-                            Color.fromRGBO(0, 161, 154, 1),
-                          ),
-                        ),
-          
-                        child: AutoSizeText(
-                          "All",
-                          minFontSize: 10.sp,
-                          maxLines: 1,
-                          overflow: TextOverflow.visible,
-                          stepGranularity: 1.sp,
-                          style: GoogleFonts.raleway(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-          
-                      OutlinedButton(
-                        onPressed: () {
-                          setState(() {
-                            filter = "Completed";
-                            activeButton = "Completed";
-                          });
-                        },
-          
-                        style: ButtonStyle(
-                          fixedSize: WidgetStatePropertyAll(Size(110.w, 25.h)),
-                          side: WidgetStateProperty.all(
-                            BorderSide(
-                              color: activeButton == "Completed"
-                                  ? Colors.transparent
-                                  : Color.fromRGBO(0, 161, 154, 1),
-                            ),
-                          ),
-          
-                          backgroundColor: WidgetStatePropertyAll(
-                            activeButton == "Completed"
-                                ? Color.fromRGBO(0, 161, 154, 1)
-                                : Colors.transparent,
-                          ),
-          
-                          foregroundColor: WidgetStatePropertyAll(
-                            activeButton == "Completed"
-                                ? Colors.white
-                                : Color.fromRGBO(0, 161, 154, 1),
-                          ),
-                        ),
-          
-                        child: AutoSizeText(
-                          minFontSize: 8.sp,
-                          maxLines: 1,
-                          overflow: TextOverflow.visible,
-                          stepGranularity: 1.sp,
-                          "Completed",
-                          style: GoogleFonts.raleway(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-          
-                      OutlinedButton(
-                        onPressed: () {
-                          setState(() {
-                            filter = "Uncompleted";
-                            activeButton = "Uncompleted";
-                          });
-                        },
-          
-                        style: ButtonStyle(
-                          fixedSize: WidgetStatePropertyAll(Size(120.w, 25.h)),
-                          side: WidgetStateProperty.all(
-                            BorderSide(
-                              color: activeButton == "Uncompleted"
-                                  ? Colors.transparent
-                                  : Colors.red,
-                            ),
-                          ),
-          
-                          backgroundColor: WidgetStatePropertyAll(
-                            activeButton == "Uncompleted"
-                                ? Colors.red
-                                : Colors.transparent,
-                          ),
-                          foregroundColor: WidgetStatePropertyAll(
-                            activeButton == "Uncompleted"
-                                ? Colors.white
-                                : Colors.red,
-                          ),
-                        ),
-          
-                        child: AutoSizeText(
-                          "Uncompleted",
-                          minFontSize: 8.sp,
-                          maxLines: 1,
-                          overflow: TextOverflow.visible,
-                          stepGranularity: 1.sp,
-                          style: GoogleFonts.raleway(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-
       ),
+
       body: Column(
         children: [
           SizedBox(height: 20.w),
           Expanded(
-            child: todoListToShow.isEmpty
+            child: isLoading
+              ? Center(
+                child: CircularProgressIndicator(
+                  color: Color.fromRGBO(0, 161, 154, 1)
+                )
+              )
+              : todoListToShow.isEmpty
                 ? Center(
                     child: Text(
                       "Nenhuma tarefa encontrada",
@@ -341,6 +337,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   )
+
                 : ListView.builder(
                     itemCount: todoListToShow.length,
                     itemBuilder: (context, index) {
@@ -365,6 +362,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -373,6 +371,7 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => TaskDescription(
                 taskNameController: _taskNameController,
                 taskDescriptionController: _taskDescriptionController,
+
                 onPressed: () {
                   taskManager.addTask(_taskNameController.text,
                       _taskDescriptionController.text);
@@ -384,6 +383,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
+        
         backgroundColor: Color.fromRGBO(0, 161, 154, 1),
         child: Icon(
           Icons.add,

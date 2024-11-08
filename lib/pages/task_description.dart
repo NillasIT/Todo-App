@@ -2,63 +2,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/controller/app_controller.dart';
-import 'package:todo_app/controller/task_manager.dart';
+import 'package:note/controller/app_controller.dart';
 
-class EditTask extends StatefulWidget {
-  final int index;
+class TaskDescription extends StatefulWidget {
+  final taskNameController;
+  final taskDescriptionController;
+  final Function()? onPressed;
 
-  const EditTask(
+  const TaskDescription(
     {
       super.key, 
-      required this.index, 
+      required this.taskNameController, 
+      required this.taskDescriptionController, 
+      required this.onPressed,
     }
   );
 
   @override
-  State<EditTask> createState() => _EditTaskState();
+  State<TaskDescription> createState() => _TaskDescriptionState();
 }
 
-class _EditTaskState extends State<EditTask> {
-  late TextEditingController taskNameController = TextEditingController();
-  late TextEditingController taskDescriptionController = TextEditingController();
-
-  // initState: Método chamado uma vez quando o estado é criado. Aqui:
-  // taskManager: Acessa o gerenciador de tarefas sem escutar mudanças (não queremos que a UI se    atualize neste ponto).
-  // Controladores de texto: Inicializa os controladores com o nome e a descrição da tarefa que estão sendo editados, retirando essas informações do taskManager com base no índice passado.
-  @override
-  void initState() {
-    super.initState();
-    final taskManager = Provider.of<TaskManager>(context, listen: false);
-    taskNameController = TextEditingController(text: taskManager.todoList[widget.index][0]);
-    taskDescriptionController = TextEditingController(text: taskManager.todoList[widget.index][2]);
-  }
-
-  // dispose: Método chamado quando o estado é removido. Aqui, os controladores de texto são descartados para evitar vazamentos de memória.
-  @override
-    void dispose() {
-    taskNameController.dispose();
-    taskDescriptionController.dispose();
-    super.dispose();
-  }
-
-  void saveTask() {
-    final taskManager = Provider.of<TaskManager>(context, listen: false);
-    taskManager.updateTask(widget.index, taskNameController.text, taskDescriptionController.text);
-    Navigator.pop(context);
-  }
-
+class _TaskDescriptionState extends State<TaskDescription> {
   @override
   Widget build(BuildContext context) {
-    bool isNewTask = true;
 
     return Scaffold(
       backgroundColor: AppController.instance.isDartTheme
                       ? const Color.fromARGB(255, 21, 20, 20)
                       : Colors.white,
       appBar: AppBar(
-        //forceMaterialTransparency: true,
         toolbarHeight: ScreenUtil().setHeight(60),
         backgroundColor: AppController.instance.isDartTheme
                       ? const Color.fromARGB(255, 21, 20, 20)
@@ -67,10 +39,10 @@ class _EditTaskState extends State<EditTask> {
         foregroundColor: AppController.instance.isDartTheme
                       ? Colors.white
                       : Colors.black,
-        
         elevation: 0,
+
         title: Text(
-          "Edit task",
+          "Create new task",
           style: GoogleFonts.raleway(
             fontSize: 25.sp, 
             fontWeight: FontWeight.bold,
@@ -79,13 +51,12 @@ class _EditTaskState extends State<EditTask> {
 
         actions: [
           IconButton(
-            onPressed: () { 
-              saveTask();
-            }, 
+            onPressed: widget.onPressed, 
+            
             icon: Icon(
-              Icons.edit,
+              Icons.save_rounded,
               size: 20.w,
-              color: Colors.amber,
+              color: Color.fromRGBO(0, 161, 154, 1),
             ),
           ),
         ],
@@ -97,8 +68,8 @@ class _EditTaskState extends State<EditTask> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: TextField(
-                controller: taskNameController,
-                
+                controller: widget.taskNameController,
+              
                 style: GoogleFonts.raleway(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
@@ -109,15 +80,13 @@ class _EditTaskState extends State<EditTask> {
                 textAlign: TextAlign.justify,
               
                 decoration: InputDecoration(
-                  hintText: isNewTask
-                            ? "Titulo da tarefa"
-                            // ignore: dead_code
-                            : null,
+                  hintText: "Titulo da tarefa",
                   hintStyle: GoogleFonts.raleway(
                     fontSize: 20.sp,
-                    color: Colors.grey.shade700,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.bold,
                   ),
-              
+                  
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18.5.r),
                       borderSide: BorderSide(
@@ -171,7 +140,7 @@ class _EditTaskState extends State<EditTask> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: TextField(
-                controller: taskDescriptionController,
+                controller: widget.taskDescriptionController,
                 maxLines: 25,
               
                 style: GoogleFonts.raleway(
@@ -183,16 +152,10 @@ class _EditTaskState extends State<EditTask> {
                 textAlign: TextAlign.justify,
                 
                 decoration: InputDecoration(
-                  hintText: isNewTask
-                            ? "Nota"
-                            // ignore: dead_code
-                            : null,
-              
+                  hintText: "Nota",
                   hintStyle: GoogleFonts.raleway(
                     fontSize: 14.sp,
-                    color: AppController.instance.isDartTheme
-                        ? Colors.grey.shade800
-                        : Colors.grey.shade700,
+                    color: Colors.grey.shade700,
                   ),
               
                   focusedBorder: OutlineInputBorder(
@@ -209,6 +172,8 @@ class _EditTaskState extends State<EditTask> {
                       ),
                     ),
                 ),
+              
+                
               ),
             ),
           ],

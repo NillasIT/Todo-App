@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 
 class TaskManager with ChangeNotifier {
   DateTime now = DateTime.now();
-  //String formattedDate = DateFormat("EEEE, dd MMM yyyy").format(now);
   List<List<dynamic>> todoList = [];
   List<Map<String, dynamic>> completedTasks = [];
   List<Map<String, dynamic>> uncompletedTasks = [];
@@ -77,7 +76,6 @@ class TaskManager with ChangeNotifier {
       DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now()).toString(),
     ]);
     updateIndexes(); // Atualiza os índices após adição de tarefa
-    saveTasks();
     saveTasks();
     notifyListeners();
   }

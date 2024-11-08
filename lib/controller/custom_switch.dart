@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/controller/app_controller.dart';
+import 'package:note/controller/app_controller.dart';
 
 class CustomSwitch extends StatefulWidget {
   const CustomSwitch({super.key});
