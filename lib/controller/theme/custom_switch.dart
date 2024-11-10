@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:note/controller/app_controller.dart';
+import 'package:note/controller/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomSwitch extends StatefulWidget {
   const CustomSwitch({super.key});
@@ -11,13 +12,19 @@ class CustomSwitch extends StatefulWidget {
 class _CustomSwitchState extends State<CustomSwitch> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Switch(
       activeColor: Colors.black,
       activeTrackColor: Colors.blue,
       inactiveTrackColor: Colors.white,
-      value: AppController.instance.isDartTheme, 
+      trackOutlineColor: themeProvider.isDarkMode
+                        ? WidgetStatePropertyAll(const Color.fromARGB(255, 21, 20, 20))
+                        : WidgetStatePropertyAll(Colors.grey),
+      
+      value: themeProvider.isDarkMode,
       onChanged: (value) {
-        AppController.instance.changeTheme();
+        themeProvider.toogleTheme();
       }
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:note/controller/app_controller.dart';
+import 'package:note/controller/theme/theme_provider.dart';
 import 'package:note/controller/task_manager.dart';
 import 'package:note/main.dart';
 import 'package:note/pages/edit_task.dart';
@@ -16,7 +16,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => TaskManager()),
-          ChangeNotifierProvider(create: (_) => AppController())
+          ChangeNotifierProvider(create: (_) => ThemeProvider())
         ],
         child: MyApp(),
       ),
@@ -35,7 +35,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => TaskManager()),
-          ChangeNotifierProvider(create: (_) => AppController())
+          ChangeNotifierProvider(create: (_) => ThemeProvider())
         ],
         child: MyApp(),
       ),
@@ -69,7 +69,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => TaskManager()),
-          ChangeNotifierProvider(create: (_) => AppController())
+          ChangeNotifierProvider(create: (_) => ThemeProvider())
         ],
         child: MyApp(),
       ),
@@ -103,7 +103,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => TaskManager()),
-          ChangeNotifierProvider(create: (_) => AppController())
+          ChangeNotifierProvider(create: (_) => ThemeProvider())
         ],
         child: MyApp(),
       ),
@@ -145,7 +145,7 @@ void main() {
       MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TaskManager()),
-        ChangeNotifierProvider(create: (_) => AppController()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: MyApp(),
     ),

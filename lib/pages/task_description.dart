@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:note/controller/app_controller.dart';
 
 class TaskDescription extends StatefulWidget {
   final taskNameController;
@@ -27,18 +26,10 @@ class _TaskDescriptionState extends State<TaskDescription> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: AppController.instance.isDartTheme
-                      ? const Color.fromARGB(255, 21, 20, 20)
-                      : Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         toolbarHeight: ScreenUtil().setHeight(60),
-        backgroundColor: AppController.instance.isDartTheme
-                      ? const Color.fromARGB(255, 21, 20, 20)
-                      : Colors.white,
-
-        foregroundColor: AppController.instance.isDartTheme
-                      ? Colors.white
-                      : Colors.black,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
 
         title: Text(
@@ -73,9 +64,6 @@ class _TaskDescriptionState extends State<TaskDescription> {
                 style: GoogleFonts.raleway(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppController.instance.isDartTheme
-                        ? Colors.white
-                        : Colors.black,
                 ),
                 textAlign: TextAlign.justify,
               
@@ -107,9 +95,7 @@ class _TaskDescriptionState extends State<TaskDescription> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
               child: Divider(
-                color: AppController.instance.isDartTheme
-                        ? const Color.fromARGB(255, 51, 51, 51)
-                        : const Color.fromARGB(255, 202, 201, 201),
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
         
@@ -131,9 +117,7 @@ class _TaskDescriptionState extends State<TaskDescription> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
               child: Divider(
-                color: AppController.instance.isDartTheme
-                        ? const Color.fromARGB(255, 51, 51, 51)
-                        : const Color.fromARGB(255, 202, 201, 201),
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
         
@@ -145,9 +129,7 @@ class _TaskDescriptionState extends State<TaskDescription> {
               
                 style: GoogleFonts.raleway(
                   fontSize: 14.sp,
-                  color: AppController.instance.isDartTheme
-                        ? Colors.grey.shade100
-                        : Colors.grey.shade900,
+                  color: Theme.of(context).colorScheme.onSecondaryFixed
                 ),
                 textAlign: TextAlign.justify,
                 
@@ -155,7 +137,7 @@ class _TaskDescriptionState extends State<TaskDescription> {
                   hintText: "Nota",
                   hintStyle: GoogleFonts.raleway(
                     fontSize: 14.sp,
-                    color: Colors.grey.shade700,
+                    color: Theme.of(context).colorScheme.onTertiaryFixed,
                   ),
               
                   focusedBorder: OutlineInputBorder(

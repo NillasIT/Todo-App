@@ -3,8 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:note/controller/app_controller.dart';
-import 'package:note/controller/custom_switch.dart';
+import 'package:note/controller/theme/custom_switch.dart';
 import 'package:note/controller/task_manager.dart';
 import 'package:note/pages/task_description.dart';
 import 'package:note/pages/todo_home.dart';
@@ -71,9 +70,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: AppController.instance.isDartTheme
-                    ? const Color.fromARGB(255, 21, 20, 20)
-                    : Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
 
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -101,9 +98,6 @@ class _HomePageState extends State<HomePage> {
                     style: GoogleFonts.raleway(
                         fontSize: 25.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppController.instance.isDartTheme
-                             ? Colors.white
-                             : Colors.black,
                     ),
                   ),
                 ),
@@ -118,9 +112,7 @@ class _HomePageState extends State<HomePage> {
                 "Best platform for creating to-do list",
                 style: GoogleFonts.raleway(
                   fontSize: 10.sp,
-                  color: AppController.instance.isDartTheme
-                       ? Colors.grey.shade100
-                       : Colors.grey.shade800,
+                  color: Colors.grey.shade500
                 ),
               ),
             ),
@@ -135,22 +127,14 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    style: GoogleFonts.raleway(
-                      color:  AppController.instance.isDartTheme
-                               ? Colors.white
-                               : Colors.black,
-                    ),
+
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: AppController.instance.isDartTheme
-                               ? Colors.grey.shade900
-                               : Colors.grey.shade300,
+                      fillColor: Theme.of(context).colorScheme.onTertiary,
                       
                       hintText: "  Search task",
                       hintStyle: GoogleFonts.raleway(
-                        color: AppController.instance.isDartTheme
-                               ? Colors.grey.shade400
-                               : Colors.grey.shade500,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(18.5.r),
@@ -176,9 +160,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   icon: Icon(
                     Icons.search,
-                    color: AppController.instance.isDartTheme
-                          ? Colors.white
-                          : Colors.grey.shade900,
+                    color: Theme.of(context).colorScheme.onSecondary,
                   ),
                 ),
               ],

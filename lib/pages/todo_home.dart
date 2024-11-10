@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:note/controller/app_controller.dart';
 import 'package:note/controller/task_manager.dart';
 import 'package:note/pages/edit_task.dart';
 import 'package:provider/provider.dart';
@@ -44,15 +43,11 @@ class TodoHome extends StatelessWidget {
                     height: 100.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.5.r),
-                      color: AppController.instance.isDartTheme
-                            ? Colors.grey.shade900
-                            : Colors.grey.shade100,
+                      color: Theme.of(context).colorScheme.primary,
                   
                       boxShadow: [
                         BoxShadow(
-                          color: AppController.instance.isDartTheme
-                                ? const Color.fromARGB(255, 8, 8, 8)
-                                : Colors.grey.shade400,
+                          color: Theme.of(context).colorScheme.secondary,
                   
                           offset: Offset(4.w, 8.h),
                           blurRadius: 20.r,
@@ -95,9 +90,6 @@ class TodoHome extends StatelessWidget {
                                     style: GoogleFonts.raleway(
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.w500,
-                                      color: AppController.instance.isDartTheme
-                                            ? Colors.white
-                                            : Colors.black,
                                     ),
                                   ),
                                 ),
@@ -146,9 +138,7 @@ class TodoHome extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15.w),
                           child: Divider(
-                            color: AppController.instance.isDartTheme
-                                ? const Color.fromARGB(255, 51, 51, 51)
-                                : Colors.grey.shade300,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                   
@@ -163,10 +153,7 @@ class TodoHome extends StatelessWidget {
                                 child: Text(
                                   dateTime,
                                   style: GoogleFonts.raleway(
-                                    color: AppController.instance.isDartTheme
-                                        ? const Color.fromARGB(255, 195, 194, 194)
-                                        : const Color.fromARGB(255, 84, 82, 82),
-                                            
+                                    color: Theme.of(context).colorScheme.onPrimaryFixed,   
                                     fontSize: 16.sp
                                   ),
                                 ),
