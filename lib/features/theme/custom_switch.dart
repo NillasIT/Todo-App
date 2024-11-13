@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:note/controller/theme/theme_provider.dart';
+import 'package:note/features/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class CustomSwitch extends StatefulWidget {

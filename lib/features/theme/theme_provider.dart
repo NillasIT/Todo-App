@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:note/controller/theme/theme.dart';
+import 'package:note/features/theme/theme.dart';
 
 class ThemeProvider with ChangeNotifier {
   static ThemeProvider instance = ThemeProvider(); //Apenas poder usar esta instancia

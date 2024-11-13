@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:note/controller/theme/theme_provider.dart';
-import 'package:note/controller/task_manager.dart';
-import 'package:note/pages/home_page.dart';
+import 'package:note/features/theme/theme_provider.dart';
+import 'package:note/features/controller/task_manager.dart';
+import 'package:note/features/pages/home_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {

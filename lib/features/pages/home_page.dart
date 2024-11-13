@@ -3,10 +3,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:note/controller/theme/custom_switch.dart';
-import 'package:note/controller/task_manager.dart';
-import 'package:note/pages/task_description.dart';
-import 'package:note/pages/todo_home.dart';
+import 'package:note/features/theme/custom_switch.dart';
+import 'package:note/features/controller/task_manager.dart';
+import 'package:note/features/pages/task_description.dart';
+import 'package:note/features/pages/todo_home.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
