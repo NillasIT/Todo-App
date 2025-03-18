@@ -23,9 +23,6 @@ class _EditTaskState extends State<EditTask> {
   late TextEditingController taskNameController = TextEditingController();
   late TextEditingController taskDescriptionController = TextEditingController();
 
-  // initState: Método chamado uma vez quando o estado é criado. Aqui:
-  // taskManager: Acessa o gerenciador de tarefas sem escutar mudanças (não queremos que a UI se    atualize neste ponto).
-  // Controladores de texto: Inicializa os controladores com o nome e a descrição da tarefa que estão sendo editados, retirando essas informações do taskManager com base no índice passado.
   @override
   void initState() {
     super.initState();
@@ -180,14 +177,14 @@ class _EditTaskState extends State<EditTask> {
                       borderSide: BorderSide(
                         color: Colors.transparent,
                       )
-                    ),
+                  ),
                       
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(18.5.r),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                      ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18.5.r),
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
                     ),
+                  ),
                 ),
               ),
             ),
