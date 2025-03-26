@@ -19,7 +19,7 @@ class TaskManager with ChangeNotifier {
     prefs.setString('todoList', encodedTasks);
   }
 
-  // Carregar tarefas do SharedPreferences
+  // * Carregar tarefas do Banco de Dados local, SharedPreferences
   Future<void> loadTasks() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? storedTasks = prefs.getString('todoList');
@@ -32,7 +32,7 @@ class TaskManager with ChangeNotifier {
       todoList = [
         [
           "Tap plus to add new task",
-          false,
+          false, 
           "Task description!",
           DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now()).toString(),
         ],

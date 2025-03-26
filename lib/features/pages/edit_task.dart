@@ -31,9 +31,9 @@ class _EditTaskState extends State<EditTask> {
     taskDescriptionController = TextEditingController(text: taskManager.todoList[widget.index][2]);
   }
 
-  // dispose: Método chamado quando o estado é removido. Aqui, os controladores de texto são descartados para evitar vazamentos de memória.
+  // * Dispose: Método chamado quando o estado é removido. Aqui, os controladores de texto são descartados para evitar vazamentos de memória.
   @override
-    void dispose() {
+  void dispose() {
     taskNameController.dispose();
     taskDescriptionController.dispose();
     super.dispose();
@@ -46,6 +46,7 @@ class _EditTaskState extends State<EditTask> {
   }
 
   @override
+
   Widget build(BuildContext context) {
     bool isNewTask = true;
 
@@ -65,6 +66,7 @@ class _EditTaskState extends State<EditTask> {
           ),
         ),
 
+        
         actions: [
           IconButton(
             onPressed: () { 
